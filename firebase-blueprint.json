@@ -1,0 +1,110 @@
+{
+  "entities": {
+    "Course": {
+      "title": "Course",
+      "description": "Training course information",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "category": { "type": "string", "enum": ["Skill", "Technical", "Beauty", "Others"] },
+        "duration": { "type": "string" },
+        "status": { "type": "string", "enum": ["Ongoing", "Upcoming"] },
+        "startDate": { "type": "string", "format": "date" },
+        "endDate": { "type": "string", "format": "date" },
+        "fee": { "type": "string" },
+        "registrationLink": { "type": "string", "format": "uri" }
+      },
+      "required": ["name", "category", "duration", "status"]
+    },
+    "Announcement": {
+      "title": "Announcement",
+      "description": "Latest news and updates",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "body": { "type": "string" },
+        "date": { "type": "string", "format": "date" },
+        "visible": { "type": "boolean" }
+      },
+      "required": ["title", "body", "date", "visible"]
+    },
+    "SettingsGeneral": {
+      "title": "General Settings",
+      "description": "Global application configuration",
+      "type": "object",
+      "properties": {
+        "welcomeMessage": { "type": "string" },
+        "websiteURL": { "type": "string", "format": "uri" },
+        "applyURL": { "type": "string", "format": "uri" },
+        "contact": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "phone": { "type": "string" },
+            "designation": { "type": "string" }
+          }
+        },
+        "whatsappEnabled": { "type": "boolean" },
+        "whatsappNumber": { "type": "string" },
+        "mapEmbedURL": { "type": "string", "format": "uri" }
+      }
+    },
+    "SettingsBranding": {
+      "title": "Branding Settings",
+      "description": "Visual branding configuration",
+      "type": "object",
+      "properties": {
+        "logoURL": { "type": "string" },
+        "showCredits": { "type": "boolean" }
+      }
+    },
+    "SettingsTheme": {
+      "title": "Theme Settings",
+      "description": "UI theme colors",
+      "type": "object",
+      "properties": {
+        "primaryColor": { "type": "string" },
+        "secondaryColor": { "type": "string" }
+      }
+    },
+    "ChatLog": {
+      "title": "Chat Log",
+      "description": "History of user interactions",
+      "type": "object",
+      "properties": {
+        "timestamp": { "type": "string", "format": "date-time" },
+        "sessionId": { "type": "string" },
+        "userMessage": { "type": "string" },
+        "botReply": { "type": "string" },
+        "detectedLanguage": { "type": "string" }
+      },
+      "required": ["timestamp", "sessionId", "userMessage", "botReply"]
+    }
+  },
+  "firestore": {
+    "/courses/{courseId}": {
+      "schema": "Course",
+      "description": "Collection of courses"
+    },
+    "/announcements/{announcementId}": {
+      "schema": "Announcement",
+      "description": "Collection of community announcements"
+    },
+    "/settings/general": {
+      "schema": "SettingsGeneral",
+      "description": "General application settings"
+    },
+    "/settings/branding": {
+      "schema": "SettingsBranding",
+      "description": "Branding settings"
+    },
+    "/settings/theme": {
+      "schema": "SettingsTheme",
+      "description": "Theme settings"
+    },
+    "/chat_logs/{logId}": {
+      "schema": "ChatLog",
+      "description": "Interaction logs"
+    }
+  }
+}

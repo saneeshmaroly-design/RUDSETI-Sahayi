@@ -1,0 +1,6 @@
+{
+  "name": "RUDSETI Sahayi",
+  "description": "Multilingual AI career guidance chatbot for RUDSETI Institute Kannur, powered by Gemini and Firebase.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["AI Chat", "Speech-to-Text", "Text-to-Speech", "Admin Dashboard"]
+}

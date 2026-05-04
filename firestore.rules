@@ -1,0 +1,63 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper Functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // --- Validation Helpers ---
+
+    function isValidCourse(data) {
+      return data.name is string && data.name.size() > 0 && data.name.size() <= 200 &&
+             data.category in ['Skill', 'Technical', 'Beauty', 'Others'] &&
+             data.duration is string && data.duration.size() <= 100 &&
+             data.status in ['Ongoing', 'Upcoming'];
+    }
+
+    function isValidAnnouncement(data) {
+      return data.title is string && data.title.size() > 0 && data.title.size() <= 300 &&
+             data.body is string && data.body.size() <= 5000 &&
+             data.visible is bool;
+    }
+
+    function isValidChatLog(data) {
+      return data.userMessage is string && data.userMessage.size() <= 2000 &&
+             data.botReply is string && data.botReply.size() <= 5000 &&
+             data.sessionId is string && data.sessionId.size() <= 128 &&
+             data.timestamp == request.time;
+    }
+
+    // --- Collection Matches ---
+
+    match /courses/{courseId} {
+      allow read: if true;
+      allow write: if isSignedIn() && isValidCourse(request.resource.data);
+    }
+
+    match /announcements/{announcementId} {
+      allow read: if true;
+      allow write: if isSignedIn() && isValidAnnouncement(request.resource.data);
+    }
+
+    match /settings/{settingId} {
+      allow read: if true;
+      allow write: if isSignedIn();
+    }
+
+    match /chat_logs/{logId} {
+      // Chatbot writes, admin reads
+      allow create: if isValidChatLog(request.resource.data);
+      allow read, update, delete: if isSignedIn();
+    }
+  }
+}
